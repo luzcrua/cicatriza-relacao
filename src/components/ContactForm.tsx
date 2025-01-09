@@ -11,14 +11,54 @@ export const ContactForm = () => {
     email: "",
     message: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Substitua esta URL pela URL do seu webhook do Zapier
+  const ZAPIER_WEBHOOK_URL = "";
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Mensagem enviada com sucesso!",
-      description: "Em breve entraremos em contato com você.",
-    });
-    setFormData({ name: "", email: "", message: "" });
+    
+    if (!ZAPIER_WEBHOOK_URL) {
+      toast({
+        title: "Erro",
+        description: "URL do webhook não configurada",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(ZAPIER_WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "no-cors",
+        body: JSON.stringify({
+          ...formData,
+          timestamp: new Date().toISOString(),
+          source: window.location.origin,
+        }),
+      });
+
+      toast({
+        title: "Mensagem enviada com sucesso!",
+        description: "Em breve entraremos em contato com você.",
+      });
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("Erro ao enviar formulário:", error);
+      toast({
+        title: "Erro ao enviar mensagem",
+        description: "Por favor, tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -44,6 +84,7 @@ export const ContactForm = () => {
               }
               className="w-full p-4"
               required
+              disabled={isLoading}
             />
           </div>
           <div>
@@ -56,6 +97,7 @@ export const ContactForm = () => {
               }
               className="w-full p-4"
               required
+              disabled={isLoading}
             />
           </div>
           <div>
@@ -67,13 +109,15 @@ export const ContactForm = () => {
               }
               className="w-full p-4 min-h-[150px]"
               required
+              disabled={isLoading}
             />
           </div>
           <Button
             type="submit"
             className="w-full bg-primary hover:bg-primary-light text-white text-lg py-6"
+            disabled={isLoading}
           >
-            Enviar Mensagem
+            {isLoading ? "Enviando..." : "Enviar Mensagem"}
           </Button>
         </form>
       </div>
