@@ -1,8 +1,8 @@
 import { HeroSection } from "@/components/HeroSection";
 import { PainPoints } from "@/components/PainPoints";
 import { JourneySteps } from "@/components/JourneySteps";
-import { Benefits } from "@/components/Benefits";
-import { Testimonials } from "@/components/Testimonials";
+import { MethodologySection } from "@/components/MethodologySection";
+import { ResultsSection } from "@/components/ResultsSection";
 import { ContactForm } from "@/components/ContactForm";
 
 const Index = () => {
@@ -11,8 +11,8 @@ const Index = () => {
       <HeroSection />
       <PainPoints />
       <JourneySteps />
-      <Benefits />
-      <Testimonials />
+      <MethodologySection />
+      <ResultsSection />
       <ContactForm />
     </div>
   );
